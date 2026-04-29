@@ -1,65 +1,97 @@
-import Image from "next/image";
+export const dynamic = "force-dynamic";
+import Link from "next/link";
+import { getDeals } from "@/actions/deals";
+import { getAdvisors } from "@/actions/advisors";
+import { KpiCard } from "@/components/dashboard/KpiCard";
+import { AdvisorSummaryTable } from "@/components/dashboard/AdvisorSummaryTable";
+import { Button } from "@/components/ui/button";
+import { computeMetrics, getWeekBounds } from "@/lib/deal-utils";
+import { formatCurrency } from "@/lib/utils";
+import { Plus } from "lucide-react";
+import type { Deal, Advisor } from "@/lib/db/schema";
 
-export default function Home() {
+export default async function DashboardPage() {
+  const [deals, advisors] = await Promise.all([getDeals(), getAdvisors()]);
+  const { start, end } = getWeekBounds(new Date());
+  const m = computeMetrics(deals as Deal[], start, end);
+
+  const netPositive = m.netHopperChange >= 0;
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
+    <div className="px-4 py-6 space-y-6">
+      <div className="flex items-center justify-between">
+        <h1 className="text-xl font-bold text-slate-900">Dashboard</h1>
+        <Link href="/deals/new">
+          <Button size="sm" className="gap-1.5">
+            <Plus className="h-4 w-4" />
+            Add Deal
+          </Button>
+        </Link>
+      </div>
+
+      {/* Pipeline snapshot */}
+      <div>
+        <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Pipeline</h2>
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+          <KpiCard
+            title="Current LOI Pipeline"
+            value={formatCurrency(m.loiPipeline)}
+            accent="blue"
+          />
+          <KpiCard
+            title="Current Hopper"
+            value={formatCurrency(m.currentHopper)}
+            accent="amber"
+          />
+          <KpiCard
+            title="Expected Closings (Next 90 Days)"
+            value={formatCurrency(m.next90Days)}
+            accent="green"
+          />
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+      </div>
+
+      {/* This week */}
+      <div>
+        <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">This Week</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
+          <KpiCard
+            title="LOI Added"
+            value={formatCurrency(m.loiAddedAmount)}
+            sub={`${m.loiAddedCount} deal${m.loiAddedCount !== 1 ? "s" : ""}`}
+            accent="blue"
+          />
+          <KpiCard
+            title="Hopper Gain"
+            value={formatCurrency(m.hopperGainAmount)}
+            sub={`${m.hopperGainCount} deal${m.hopperGainCount !== 1 ? "s" : ""}`}
+            accent="amber"
+          />
+          <KpiCard
+            title="Closed"
+            value={formatCurrency(m.closedAmount)}
+            sub={`${m.closedCount} deal${m.closedCount !== 1 ? "s" : ""}`}
+            accent="green"
+          />
+          <KpiCard
+            title="Lost"
+            value={formatCurrency(m.loiLostAmount + m.hopperLostAmount)}
+            sub={`${m.loiLostCount + m.hopperLostCount} deal${(m.loiLostCount + m.hopperLostCount) !== 1 ? "s" : ""}`}
+            accent="red"
+          />
+          <KpiCard
+            title="Net Hopper Change"
+            value={`${netPositive ? "+" : ""}${formatCurrency(m.netHopperChange)}`}
+            accent={netPositive ? "green" : "red"}
+          />
         </div>
-      </main>
+      </div>
+
+      {/* Advisor table */}
+      <AdvisorSummaryTable
+        deals={deals as (Deal & { advisor: Advisor })[]}
+        advisors={advisors}
+      />
     </div>
   );
 }

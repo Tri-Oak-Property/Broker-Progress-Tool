@@ -127,6 +127,40 @@ function AdvisorCard({
           </div>
         </div>
 
+        {(() => {
+          const ucDeals = myDeals.filter((d) => getDealStatus(d) === "Under Contract");
+          if (ucDeals.length === 0) return null;
+          return (
+            <div className="border-t pt-4" style={{ borderColor: border }}>
+              <p className="text-xs font-semibold uppercase tracking-wider mb-2" style={{ color: brandMuted }}>Active UC Deals — 50/50 Split</p>
+              <table className="w-full text-xs">
+                <thead>
+                  <tr>
+                    <th className="text-left pb-1 font-semibold" style={{ color: brandMuted }}>Deal</th>
+                    <th className="text-right pb-1 font-semibold" style={{ color: brandMuted }}>Full Commission</th>
+                    <th className="text-right pb-1 font-semibold" style={{ color: brandMuted }}>Broker (50%)</th>
+                    <th className="text-right pb-1 font-semibold" style={{ color: brandMuted }}>Company (50%)</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {ucDeals.map((d) => {
+                    const full = toNum(d.hopperGainAmount);
+                    const half = full / 2;
+                    return (
+                      <tr key={d.id} className="border-t" style={{ borderColor: border }}>
+                        <td className="py-1 pr-2 font-medium" style={{ color: "#1B3A2D" }}>{d.dealName}</td>
+                        <td className="py-1 text-right tabular-nums text-amber-700">{formatCurrency(full)}</td>
+                        <td className="py-1 text-right tabular-nums" style={{ color: "#1B3A2D" }}>{formatCurrency(half)}</td>
+                        <td className="py-1 text-right tabular-nums" style={{ color: "#1B3A2D" }}>{formatCurrency(half)}</td>
+                      </tr>
+                    );
+                  })}
+                </tbody>
+              </table>
+            </div>
+          );
+        })()}
+
         <div className="border-t pt-3 flex items-center justify-between" style={{ borderColor: border }}>
           <span className="text-xs" style={{ color: brandMuted }}>Closed YTD</span>
           <span className="font-bold text-green-700">{formatCurrency(closedYtd)}</span>

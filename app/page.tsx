@@ -5,7 +5,7 @@ import { getAdvisors } from "@/actions/advisors";
 import { KpiCard } from "@/components/dashboard/KpiCard";
 import { AdvisorSummaryTable } from "@/components/dashboard/AdvisorSummaryTable";
 import { Button } from "@/components/ui/button";
-import { computeMetrics, getWeekBounds } from "@/lib/deal-utils";
+import { computeMetrics, getWeekBounds, getDealStatus, isWithinDays, toNum } from "@/lib/deal-utils";
 import { formatCurrency } from "@/lib/utils";
 import { Plus } from "lucide-react";
 import type { Deal, Advisor } from "@/lib/db/schema";
@@ -16,6 +16,13 @@ export default async function DashboardPage() {
   const m = computeMetrics(deals as Deal[], start, end);
 
   const netPositive = m.netHopperChange >= 0;
+
+  const activeUC = (deals as Deal[]).filter((d) => getDealStatus(d) === "Under Contract");
+  const next30 = activeUC.filter((d) => isWithinDays(d.expectedCloseDate, 30)).reduce((s, d) => s + toNum(d.hopperGainAmount), 0);
+  const next60 = activeUC.filter((d) => isWithinDays(d.expectedCloseDate, 60)).reduce((s, d) => s + toNum(d.hopperGainAmount), 0);
+  const next90 = activeUC.filter((d) => isWithinDays(d.expectedCloseDate, 90)).reduce((s, d) => s + toNum(d.hopperGainAmount), 0);
+  const companyShare = m.currentHopper / 2;
+  const brokerShare = m.currentHopper / 2;
 
   return (
     <div className="px-4 py-6 space-y-6">
@@ -32,7 +39,7 @@ export default async function DashboardPage() {
       {/* Pipeline snapshot */}
       <div>
         <h2 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "rgba(27,58,45,0.45)" }}>Pipeline</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
           <KpiCard
             title="Current LOI Pipeline"
             value={formatCurrency(m.loiPipeline)}
@@ -43,11 +50,36 @@ export default async function DashboardPage() {
             value={formatCurrency(m.currentHopper)}
             accent="amber"
           />
-          <KpiCard
-            title="Expected Closings (Next 90 Days)"
-            value={formatCurrency(m.next90Days)}
-            accent="green"
-          />
+          <div className="rounded-lg border bg-white p-4 space-y-1" style={{ borderColor: "#E0DDD6" }}>
+            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "rgba(27,58,45,0.45)" }}>Expected Closings</p>
+            <div className="space-y-0.5 pt-1">
+              <div className="flex justify-between text-sm">
+                <span style={{ color: "rgba(27,58,45,0.6)" }}>30 days</span>
+                <span className="font-semibold text-green-700 tabular-nums">{formatCurrency(next30)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span style={{ color: "rgba(27,58,45,0.6)" }}>60 days</span>
+                <span className="font-semibold text-green-700 tabular-nums">{formatCurrency(next60)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span style={{ color: "rgba(27,58,45,0.6)" }}>90 days</span>
+                <span className="font-semibold text-green-700 tabular-nums">{formatCurrency(next90)}</span>
+              </div>
+            </div>
+          </div>
+          <div className="rounded-lg border bg-white p-4 space-y-1" style={{ borderColor: "#E0DDD6" }}>
+            <p className="text-xs font-semibold uppercase tracking-wider" style={{ color: "rgba(27,58,45,0.45)" }}>Hopper Split (50/50)</p>
+            <div className="space-y-0.5 pt-1">
+              <div className="flex justify-between text-sm">
+                <span style={{ color: "rgba(27,58,45,0.6)" }}>Company</span>
+                <span className="font-semibold tabular-nums" style={{ color: "#1B3A2D" }}>{formatCurrency(companyShare)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span style={{ color: "rgba(27,58,45,0.6)" }}>Broker</span>
+                <span className="font-semibold tabular-nums" style={{ color: "#1B3A2D" }}>{formatCurrency(brokerShare)}</span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
 

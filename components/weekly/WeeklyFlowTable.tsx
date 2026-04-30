@@ -183,7 +183,6 @@ export function WeeklyFlowTable({ deals }: { deals: Deal[] }) {
                 <th className="px-3 py-2.5 text-left text-xs font-semibold sticky left-0 min-w-[120px]" style={{ color: brandMuted, backgroundColor: bg }}>Week</th>
                 <th className="px-3 py-2.5 text-right text-xs font-semibold text-blue-600">LOI Added</th>
                 <th className="px-3 py-2.5 text-right text-xs font-semibold text-red-500">LOI Lost</th>
-                <th className="px-3 py-2.5 text-right text-xs font-semibold text-amber-600">LOI → UC</th>
                 <th className="px-3 py-2.5 text-right text-xs font-semibold text-amber-700">Hopper Gain</th>
                 <th className="px-3 py-2.5 text-right text-xs font-semibold text-red-500">Hopper Lost</th>
                 <th className="px-3 py-2.5 text-right text-xs font-semibold text-green-700">Closed</th>
@@ -218,9 +217,6 @@ export function WeeklyFlowTable({ deals }: { deals: Deal[] }) {
                     <td className="px-3 py-2.5 text-right text-red-600 tabular-nums">
                       {row.loiLostCount > 0 ? fmt(row.loiLostAmt, row.loiLostCount) : <span style={{ color: border }}>—</span>}
                     </td>
-                    <td className="px-3 py-2.5 text-right text-amber-700 tabular-nums">
-                      {row.loiToUcCount > 0 ? fmt(row.loiToUcAmt, row.loiToUcCount) : <span style={{ color: border }}>—</span>}
-                    </td>
                     <td className="px-3 py-2.5 text-right text-amber-800 tabular-nums font-medium">
                       {row.hopperGainCount > 0 ? fmt(row.hopperGainAmt, row.hopperGainCount) : <span style={{ color: border }}>—</span>}
                     </td>
@@ -248,7 +244,7 @@ export function WeeklyFlowTable({ deals }: { deals: Deal[] }) {
       </div>
 
       <p className="text-xs" style={{ color: brandMuted }}>
-        LOI → UC and Hopper Gain both reflect the hopper_gain_amount for deals that went Under Contract that week.
+        Hopper Gain reflects the hopper_gain_amount for deals that went Under Contract that week.
         Ending LOI and Hopper balances are point-in-time snapshots as of end of each week.
       </p>
     </div>

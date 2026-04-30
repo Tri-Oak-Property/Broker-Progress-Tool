@@ -48,16 +48,16 @@ export function AdvisorSummaryTable({
   const active = rows.filter((r) => r.advisor.active);
 
   return (
-    <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
-      <div className="px-5 py-3 border-b border-slate-200">
-        <h2 className="font-semibold text-slate-900 text-sm">Advisor Pipeline</h2>
+    <div className="rounded-lg border bg-white overflow-hidden" style={{ borderColor: "#E0DDD6" }}>
+      <div className="px-5 py-3 border-b" style={{ borderColor: "#E0DDD6" }}>
+        <h2 className="font-semibold text-sm" style={{ color: "#1B3A2D" }}>Advisor Pipeline</h2>
       </div>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+            <tr className="border-b" style={{ borderColor: "#E0DDD6", backgroundColor: "#F5F2EC" }}>
               {["Advisor", "LOI Pipeline", "Current Hopper", "Next 90 Days", "Closed YTD"].map((h) => (
-                <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500">
+                <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold" style={{ color: "#1B3A2D", opacity: 0.6 }}>
                   {h}
                 </th>
               ))}
@@ -65,24 +65,24 @@ export function AdvisorSummaryTable({
           </thead>
           <tbody>
             {active.map(({ advisor, loiPipeline, hopper, next90, closedYtd }) => (
-              <tr key={advisor.id} className="border-b border-slate-100 last:border-0">
-                <td className="px-4 py-2.5 font-medium text-slate-900">
+              <tr key={advisor.id} className="border-b last:border-0" style={{ borderColor: "#E0DDD6" }}>
+                <td className="px-4 py-2.5 font-medium" style={{ color: "#1B3A2D" }}>
                   <Link href={`/advisors#${advisor.id}`} className="hover:underline">
                     {advisor.firstName} {advisor.lastName}
                   </Link>
                 </td>
-                <td className="px-4 py-2.5 tabular-nums text-slate-700">{formatCurrency(loiPipeline)}</td>
-                <td className="px-4 py-2.5 tabular-nums text-slate-900 font-medium">{formatCurrency(hopper)}</td>
+                <td className="px-4 py-2.5 tabular-nums" style={{ color: "#1B3A2D" }}>{formatCurrency(loiPipeline)}</td>
+                <td className="px-4 py-2.5 tabular-nums font-medium" style={{ color: "#1B3A2D" }}>{formatCurrency(hopper)}</td>
                 <td className="px-4 py-2.5 tabular-nums text-amber-700">{formatCurrency(next90)}</td>
-                <td className="px-4 py-2.5 tabular-nums text-green-700 font-medium">{formatCurrency(closedYtd)}</td>
+                <td className="px-4 py-2.5 tabular-nums font-medium text-green-700">{formatCurrency(closedYtd)}</td>
               </tr>
             ))}
           </tbody>
           <tfoot>
-            <tr className="border-t-2 border-slate-200 bg-slate-50">
-              <td className="px-4 py-2.5 font-semibold text-slate-900 text-xs">Total</td>
-              <td className="px-4 py-2.5 tabular-nums font-semibold text-slate-700">{formatCurrency(active.reduce((s, r) => s + r.loiPipeline, 0))}</td>
-              <td className="px-4 py-2.5 tabular-nums font-semibold text-slate-900">{formatCurrency(active.reduce((s, r) => s + r.hopper, 0))}</td>
+            <tr className="border-t-2" style={{ borderColor: "#E0DDD6", backgroundColor: "#F5F2EC" }}>
+              <td className="px-4 py-2.5 font-semibold text-xs" style={{ color: "#1B3A2D" }}>Total</td>
+              <td className="px-4 py-2.5 tabular-nums font-semibold" style={{ color: "#1B3A2D" }}>{formatCurrency(active.reduce((s, r) => s + r.loiPipeline, 0))}</td>
+              <td className="px-4 py-2.5 tabular-nums font-semibold" style={{ color: "#1B3A2D" }}>{formatCurrency(active.reduce((s, r) => s + r.hopper, 0))}</td>
               <td className="px-4 py-2.5 tabular-nums font-semibold text-amber-700">{formatCurrency(active.reduce((s, r) => s + r.next90, 0))}</td>
               <td className="px-4 py-2.5 tabular-nums font-semibold text-green-700">{formatCurrency(active.reduce((s, r) => s + r.closedYtd, 0))}</td>
             </tr>

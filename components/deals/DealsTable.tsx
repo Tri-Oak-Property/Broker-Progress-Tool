@@ -15,7 +15,6 @@ import { StatusBadge } from "./StatusBadge";
 import { getDealStatus } from "@/lib/deal-utils";
 import { formatCurrency, formatDate } from "@/lib/utils";
 import type { Deal, Advisor } from "@/lib/db/schema";
-import type { DealStatus } from "@/lib/deal-utils";
 import { Plus, Pencil } from "lucide-react";
 
 type DealWithAdvisor = Deal & { advisor: Advisor };
@@ -25,6 +24,11 @@ const SIDE_LABELS: Record<string, string> = {
   seller: "Seller",
   buyer_seller: "Buyer + Seller",
 };
+
+const brand = "#1B3A2D";
+const brandMuted = "rgba(27,58,45,0.55)";
+const border = "#E0DDD6";
+const bg = "#F5F2EC";
 
 export function DealsTable({
   deals,
@@ -44,7 +48,6 @@ export function DealsTable({
       const status = getDealStatus(d);
       const name = d.dealName.toLowerCase();
       const advisorName = `${d.advisor.firstName} ${d.advisor.lastName}`.toLowerCase();
-
       if (search && !name.includes(search.toLowerCase()) && !advisorName.includes(search.toLowerCase())) return false;
       if (filterAdvisor !== "all" && d.advisorId !== filterAdvisor) return false;
       if (filterStatus !== "all" && status !== filterStatus) return false;
@@ -110,18 +113,18 @@ export function DealsTable({
       </div>
 
       {/* Count */}
-      <p className="text-sm text-slate-500">
+      <p className="text-sm" style={{ color: brandMuted }}>
         {filtered.length} deal{filtered.length !== 1 ? "s" : ""}
       </p>
 
       {/* Table — desktop */}
-      <div className="hidden lg:block rounded-lg border border-slate-200 overflow-hidden bg-white">
+      <div className="hidden lg:block rounded-lg border overflow-hidden bg-white" style={{ borderColor: border }}>
         <div className="overflow-x-auto">
           <table className="w-full text-sm">
             <thead>
-              <tr className="border-b border-slate-200 bg-slate-50">
+              <tr className="border-b" style={{ borderColor: border, backgroundColor: bg }}>
                 {["Deal Name", "Advisor", "Side", "Status", "LOI Date", "LOI Comm", "UC Date", "Hopper Amt", "Exp Close", "Closed Date", "Closed Comm", "Lost Date", "Lost Stage", ""].map((h) => (
-                  <th key={h} className="px-3 py-2.5 text-left text-xs font-semibold text-slate-500 whitespace-nowrap">
+                  <th key={h} className="px-3 py-2.5 text-left text-xs font-semibold whitespace-nowrap" style={{ color: brandMuted }}>
                     {h}
                   </th>
                 ))}
@@ -130,7 +133,7 @@ export function DealsTable({
             <tbody>
               {filtered.length === 0 && (
                 <tr>
-                  <td colSpan={14} className="px-3 py-8 text-center text-sm text-slate-400">
+                  <td colSpan={14} className="px-3 py-8 text-center text-sm" style={{ color: brandMuted }}>
                     No deals found.
                   </td>
                 </tr>
@@ -140,46 +143,49 @@ export function DealsTable({
                 return (
                   <tr
                     key={deal.id}
-                    className="border-b border-slate-100 hover:bg-slate-50 cursor-pointer"
+                    className="border-b cursor-pointer transition-colors"
+                    style={{ borderColor: border }}
+                    onMouseEnter={(e) => (e.currentTarget.style.backgroundColor = bg)}
+                    onMouseLeave={(e) => (e.currentTarget.style.backgroundColor = "")}
                     onClick={() => router.push(`/deals/${deal.id}/edit`)}
                   >
-                    <td className="px-3 py-2.5 font-medium text-slate-900 whitespace-nowrap max-w-[200px] truncate">
+                    <td className="px-3 py-2.5 font-medium whitespace-nowrap max-w-[200px] truncate" style={{ color: brand }}>
                       {deal.dealName}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {deal.advisor.firstName} {deal.advisor.lastName}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {SIDE_LABELS[deal.side]}
                     </td>
                     <td className="px-3 py-2.5">
                       <StatusBadge status={status} />
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {formatDate(deal.loiDate)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-900 whitespace-nowrap tabular-nums">
+                    <td className="px-3 py-2.5 whitespace-nowrap tabular-nums" style={{ color: brand }}>
                       {formatCurrency(deal.loiExpectedCommission)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {formatDate(deal.underContractDate)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-900 whitespace-nowrap tabular-nums">
+                    <td className="px-3 py-2.5 whitespace-nowrap tabular-nums" style={{ color: brand }}>
                       {formatCurrency(deal.hopperGainAmount)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {formatDate(deal.expectedCloseDate)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {formatDate(deal.closedDate)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-900 whitespace-nowrap tabular-nums">
+                    <td className="px-3 py-2.5 whitespace-nowrap tabular-nums" style={{ color: brand }}>
                       {formatCurrency(deal.closedCommission, true)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap">
+                    <td className="px-3 py-2.5 whitespace-nowrap" style={{ color: brandMuted }}>
                       {formatDate(deal.lostDate)}
                     </td>
-                    <td className="px-3 py-2.5 text-slate-600 whitespace-nowrap capitalize">
+                    <td className="px-3 py-2.5 whitespace-nowrap capitalize" style={{ color: brandMuted }}>
                       {deal.lostStage ? deal.lostStage.replace("_", " ") : "—"}
                     </td>
                     <td className="px-3 py-2.5" onClick={(e) => e.stopPropagation()}>
@@ -197,28 +203,28 @@ export function DealsTable({
         </div>
       </div>
 
-      {/* Card list — mobile/tablet */}
+      {/* Card list — mobile */}
       <div className="lg:hidden space-y-2">
         {filtered.length === 0 && (
-          <p className="text-center text-sm text-slate-400 py-8">No deals found.</p>
+          <p className="text-center text-sm py-8" style={{ color: brandMuted }}>No deals found.</p>
         )}
         {filtered.map((deal) => {
           const status = getDealStatus(deal);
           return (
             <Link key={deal.id} href={`/deals/${deal.id}/edit`} className="block">
-              <div className="rounded-lg border border-slate-200 bg-white p-4 hover:border-slate-300 transition-colors">
+              <div className="rounded-lg border bg-white p-4 transition-colors" style={{ borderColor: border }}>
                 <div className="flex items-start justify-between gap-2 mb-2">
-                  <span className="font-semibold text-slate-900 text-sm">{deal.dealName}</span>
+                  <span className="font-semibold text-sm" style={{ color: brand }}>{deal.dealName}</span>
                   <StatusBadge status={status} />
                 </div>
-                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs text-slate-500">
+                <div className="flex flex-wrap gap-x-4 gap-y-1 text-xs" style={{ color: brandMuted }}>
                   <span>{deal.advisor.firstName} {deal.advisor.lastName}</span>
                   <span>{SIDE_LABELS[deal.side]}</span>
                   {deal.loiDate && <span>LOI {formatDate(deal.loiDate)}</span>}
                   {deal.underContractDate && <span>UC {formatDate(deal.underContractDate)}</span>}
                   {deal.expectedCloseDate && <span>Exp Close {formatDate(deal.expectedCloseDate)}</span>}
                 </div>
-                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium text-slate-700">
+                <div className="mt-2 flex flex-wrap gap-x-4 gap-y-1 text-xs font-medium" style={{ color: brand }}>
                   {deal.hopperGainAmount && status === "Under Contract" && (
                     <span>Hopper: {formatCurrency(deal.hopperGainAmount)}</span>
                   )}

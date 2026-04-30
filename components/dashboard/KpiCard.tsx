@@ -9,11 +9,11 @@ interface KpiCardProps {
 }
 
 const accentMap = {
-  default: "text-slate-900",
-  green: "text-green-700",
-  amber: "text-amber-700",
-  blue: "text-blue-700",
-  red: "text-red-600",
+  default: "#1B3A2D",
+  green:   "#1B3A2D",
+  amber:   "#92400e",
+  blue:    "#1e40af",
+  red:     "#dc2626",
 };
 
 export function KpiCard({ title, value, sub, accent = "default" }: KpiCardProps) {
@@ -23,8 +23,8 @@ export function KpiCard({ title, value, sub, accent = "default" }: KpiCardProps)
         <CardTitle>{title}</CardTitle>
       </CardHeader>
       <CardContent>
-        <p className={cn("text-2xl font-bold", accentMap[accent])}>{value}</p>
-        {sub && <p className="text-xs text-slate-500 mt-1">{sub}</p>}
+        <p className="text-2xl font-bold" style={{ color: accentMap[accent] }}>{value}</p>
+        {sub && <p className="text-xs mt-1" style={{ color: "#1B3A2D", opacity: 0.5 }}>{sub}</p>}
       </CardContent>
     </Card>
   );

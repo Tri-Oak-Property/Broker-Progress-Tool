@@ -111,25 +111,25 @@ export function AdvisorManager({ advisors }: { advisors: Advisor[] }) {
   return (
     <div className="space-y-4">
       <div className="flex items-center justify-between">
-        <h2 className="font-semibold text-slate-900">Advisors</h2>
+        <h2 className="font-semibold" style={{ color: "#1B3A2D" }}>Advisors</h2>
         <Button size="sm" onClick={() => setShowAdd(true)} className="gap-1.5">
           <Plus className="h-4 w-4" />
           Add Advisor
         </Button>
       </div>
 
-      <div className="rounded-lg border border-slate-200 bg-white overflow-hidden">
+      <div className="rounded-lg border bg-white overflow-hidden" style={{ borderColor: "#E0DDD6" }}>
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b border-slate-200 bg-slate-50">
+            <tr className="border-b" style={{ borderColor: "#E0DDD6", backgroundColor: "#F5F2EC" }}>
               {["First Name", "Last Name", "Email", "Status", ""].map((h) => (
-                <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold text-slate-500">{h}</th>
+                <th key={h} className="px-4 py-2.5 text-left text-xs font-semibold" style={{ color: "rgba(27,58,45,0.55)" }}>{h}</th>
               ))}
             </tr>
           </thead>
           <tbody>
             {showAdd && (
-              <tr className="border-b border-slate-100 bg-green-50/30">
+              <tr className="border-b" style={{ borderColor: "#E0DDD6", backgroundColor: "rgba(27,58,45,0.04)" }}>
                 <td className="px-4 py-2">
                   <Input
                     value={newFirst}
@@ -157,7 +157,7 @@ export function AdvisorManager({ advisors }: { advisors: Advisor[] }) {
                   />
                 </td>
                 <td className="px-4 py-2">
-                  <span className="text-xs text-slate-400">New</span>
+                  <span className="text-xs" style={{ color: "rgba(27,58,45,0.4)" }}>New</span>
                 </td>
                 <td className="px-4 py-2">
                   <div className="flex gap-1">
@@ -176,10 +176,10 @@ export function AdvisorManager({ advisors }: { advisors: Advisor[] }) {
               editingId === advisor.id ? (
                 <EditRow key={advisor.id} advisor={advisor} onDone={() => setEditingId(null)} />
               ) : (
-                <tr key={advisor.id} className={`border-b border-slate-100 last:border-0 ${!advisor.active ? "opacity-50" : ""}`}>
-                  <td className="px-4 py-2.5 font-medium text-slate-900">{advisor.firstName}</td>
-                  <td className="px-4 py-2.5 text-slate-700">{advisor.lastName}</td>
-                  <td className="px-4 py-2.5 text-slate-500">{advisor.email || "—"}</td>
+                <tr key={advisor.id} className={`border-b last:border-0 ${!advisor.active ? "opacity-50" : ""}`} style={{ borderColor: "#E0DDD6" }}>
+                  <td className="px-4 py-2.5 font-medium" style={{ color: "#1B3A2D" }}>{advisor.firstName}</td>
+                  <td className="px-4 py-2.5" style={{ color: "rgba(27,58,45,0.7)" }}>{advisor.lastName}</td>
+                  <td className="px-4 py-2.5" style={{ color: "rgba(27,58,45,0.5)" }}>{advisor.email || "—"}</td>
                   <td className="px-4 py-2.5">
                     <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${advisor.active ? "bg-green-100 text-green-700" : "bg-slate-100 text-slate-500"}`}>
                       {advisor.active ? "Active" : "Inactive"}

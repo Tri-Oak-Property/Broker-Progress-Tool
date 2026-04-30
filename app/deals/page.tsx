@@ -7,7 +7,7 @@ export default async function DealsPage() {
   const [deals, advisors] = await Promise.all([getDeals(), getAdvisors()]);
   return (
     <div className="px-4 py-6">
-      <h1 className="text-xl font-bold text-slate-900 mb-6">Deals</h1>
+      <h1 className="text-xl font-bold mb-6" style={{ color: "#1B3A2D" }}>Deals</h1>
       <DealsTable deals={deals as Parameters<typeof DealsTable>[0]["deals"]} advisors={advisors} />
     </div>
   );

@@ -46,8 +46,8 @@ function Field({
 
 function Section({ title, children }: { title: string; children: React.ReactNode }) {
   return (
-    <div className="rounded-lg border border-slate-200 bg-white p-5 space-y-4">
-      <h3 className="font-semibold text-slate-900 text-sm">{title}</h3>
+    <div className="rounded-lg border bg-white p-5 space-y-4" style={{ borderColor: "#E0DDD6" }}>
+      <h3 className="font-semibold text-sm" style={{ color: "#1B3A2D" }}>{title}</h3>
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">{children}</div>
     </div>
   );
@@ -257,8 +257,8 @@ export function DealForm({ advisors, deal }: DealFormProps) {
         </Field>
       </Section>
 
-      <div className="rounded-lg border border-slate-200 bg-white p-5 space-y-3">
-        <h3 className="font-semibold text-slate-900 text-sm">Notes</h3>
+      <div className="rounded-lg border bg-white p-5 space-y-3" style={{ borderColor: "#E0DDD6" }}>
+        <h3 className="font-semibold text-sm" style={{ color: "#1B3A2D" }}>Notes</h3>
         <Textarea
           value={form.notes}
           onChange={(e) => set("notes", e.target.value)}

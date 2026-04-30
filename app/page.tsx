@@ -20,7 +20,7 @@ export default async function DashboardPage() {
   return (
     <div className="px-4 py-6 space-y-6">
       <div className="flex items-center justify-between">
-        <h1 className="text-xl font-bold text-slate-900">Dashboard</h1>
+        <h1 className="text-xl font-bold" style={{ color: "#1B3A2D" }}>Dashboard</h1>
         <Link href="/deals/new">
           <Button size="sm" className="gap-1.5">
             <Plus className="h-4 w-4" />
@@ -31,7 +31,7 @@ export default async function DashboardPage() {
 
       {/* Pipeline snapshot */}
       <div>
-        <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">Pipeline</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "rgba(27,58,45,0.45)" }}>Pipeline</h2>
         <div className="grid grid-cols-2 md:grid-cols-3 gap-3">
           <KpiCard
             title="Current LOI Pipeline"
@@ -53,7 +53,7 @@ export default async function DashboardPage() {
 
       {/* This week */}
       <div>
-        <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-wider mb-3">This Week</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: "rgba(27,58,45,0.45)" }}>This Week</h2>
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
           <KpiCard
             title="LOI Added"

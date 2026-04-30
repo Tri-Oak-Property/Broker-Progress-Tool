@@ -193,7 +193,10 @@ export default async function AdvisorsPage() {
       const hopper = myDeals
         .filter((d) => getDealStatus(d) === "Under Contract")
         .reduce((sum, d) => sum + toNum(d.hopperGainAmount), 0);
-      return { advisor, closedYtd, hopper };
+      const loiPipeline = myDeals
+        .filter((d) => getDealStatus(d) === "LOI")
+        .reduce((sum, d) => sum + toNum(d.loiExpectedCommission), 0);
+      return { advisor, closedYtd, hopper, loiPipeline };
     })
     .sort((a, b) => b.closedYtd - a.closedYtd);
 
@@ -214,24 +217,26 @@ export default async function AdvisorsPage() {
         <table className="w-full text-sm">
           <thead>
             <tr className="border-b" style={{ borderColor: border, backgroundColor: bg }}>
-              <th className="px-4 py-2.5 text-left text-xs font-semibold w-8" style={{ color: brandMuted }}>#</th>
               <th className="px-4 py-2.5 text-left text-xs font-semibold" style={{ color: brandMuted }}>Advisor</th>
-              <th className="px-4 py-2.5 text-right text-xs font-semibold text-green-700">Closed YTD</th>
+              <th className="px-4 py-2.5 text-right text-xs font-semibold text-blue-600">LOI Pipeline</th>
               <th className="px-4 py-2.5 text-right text-xs font-semibold text-amber-700">Current Hopper</th>
+              <th className="px-4 py-2.5 text-right text-xs font-semibold text-green-700">Closed YTD</th>
             </tr>
           </thead>
           <tbody>
-            {leaderboard.map(({ advisor, closedYtd, hopper }, i) => (
+            {leaderboard.map(({ advisor, closedYtd, hopper, loiPipeline }) => (
               <tr key={advisor.id} className="border-b last:border-0" style={{ borderColor: border }}>
-                <td className="px-4 py-2.5 text-xs font-bold" style={{ color: brandMuted }}>{i + 1}</td>
                 <td className="px-4 py-2.5 font-medium" style={{ color: brand }}>
                   {advisor.firstName} {advisor.lastName}
                 </td>
-                <td className="px-4 py-2.5 text-right text-green-700 tabular-nums font-semibold">
-                  {formatCurrency(closedYtd)}
+                <td className="px-4 py-2.5 text-right text-blue-700 tabular-nums">
+                  {formatCurrency(loiPipeline)}
                 </td>
                 <td className="px-4 py-2.5 text-right text-amber-700 tabular-nums">
                   {formatCurrency(hopper)}
+                </td>
+                <td className="px-4 py-2.5 text-right text-green-700 tabular-nums font-semibold">
+                  {formatCurrency(closedYtd)}
                 </td>
               </tr>
             ))}
